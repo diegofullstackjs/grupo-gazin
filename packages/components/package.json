@@ -1,0 +1,7 @@
+{
+  "name": "@grupogazin/components",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "author": "kelvin diego da silva soares < kelvin.soares@meta.com.br >",
+  "license": "MIT"
+}
