@@ -4,7 +4,7 @@ interface DevInterface {
   hobby: Array<any>;
 }
 export class PaginationDTO {
-  data: Array<DevInterface>;
+  data: any;
   page: number;
   limit: number;
   totalCount: number;

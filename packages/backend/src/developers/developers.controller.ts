@@ -12,8 +12,8 @@ import { DevelopersService } from './developers.service';
 import { CreateDeveloperDto } from './dto/create-developer.dto';
 import { PaginationDTO } from './dto/pagination-developer.dto';
 import { UpdateDeveloperDto } from './dto/update-developer.dto';
-
-@Controller('developers')
+import { Observable } from 'rxjs';
+@Controller('api/v1/developers')
 export class DevelopersController {
   constructor(private readonly developersService: DevelopersService) {}
 
@@ -23,7 +23,7 @@ export class DevelopersController {
   }
 
   @Get()
-  findAll(@Query() Paginationdto: PaginationDTO): Observable<PaginationDTO> {
+  findAll(@Query() Paginationdto: PaginationDTO): Promise<PaginationDTO> {
     Paginationdto.page = Number(Paginationdto.page);
     Paginationdto.limit = Number(Paginationdto.limit);
     return this.developersService.findAll({

@@ -17,7 +17,7 @@ export class DeveloperEntity {
   @Column({ type: 'text', array: true })
   hobby: string[];
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
   @UpdateDateColumn()
-  updated_at: Date;
+  updatedAt: Date;
 }

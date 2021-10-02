@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeveloperEntity } from './entities/developer.entity';
 import { CreateDeveloperDto } from './dto/create-developer.dto';
 import { UpdateDeveloperDto } from './dto/update-developer.dto';
-import { Observable } from 'rxjs';
 import { Repository } from 'typeorm';
 import { PaginationDTO } from './dto/pagination-developer.dto';
 
@@ -13,17 +12,19 @@ export class DevelopersService {
     @InjectRepository(DeveloperEntity)
     private readonly developerRepository: Repository<DeveloperEntity>,
   ) {}
-  create(createDeveloperDto: CreateDeveloperDto): Observable<DeveloperEntity> {
-    return this.developerRepository.create(createDeveloperDto);
+  async create(
+    createDeveloperDto: CreateDeveloperDto,
+  ): Promise<DeveloperEntity> {
+    return await this.developerRepository.save(createDeveloperDto);
   }
 
-  findAll(paginationDto: PaginationDTO): Observable<PaginationDTO> {
+  async findAll(paginationDto: PaginationDTO): Promise<PaginationDTO> {
     const skippedItems = (paginationDto.page - 1) * paginationDto.limit;
 
     const totalCount = await this.developerRepository.count();
     const developers = await this.developerRepository
       .createQueryBuilder()
-      .orderBy('createdAt', 'DESC')
+      .orderBy('id', 'DESC')
       .offset(skippedItems)
       .limit(paginationDto.limit)
       .getMany();
@@ -35,18 +36,18 @@ export class DevelopersService {
     };
   }
 
-  findOne(id: number): Observable<DeveloperEntity> {
-    return this.developerRepository.findOne(id);
+  async findOne(id: number): Promise<DeveloperEntity> {
+    return await this.developerRepository.findOne(id);
   }
 
-  update(
+  async update(
     id: number,
     updateDeveloperDto: UpdateDeveloperDto,
-  ): Observable<DeveloperEntity> {
-    return this.update(id, updateDeveloperDto);
+  ): Promise<DeveloperEntity> {
+    return await this.update(id, updateDeveloperDto);
   }
 
-  remove(id: number): Observable<boolean> {
+  remove(id: number): Promise<boolean> {
     return this.remove(id);
   }
 }
