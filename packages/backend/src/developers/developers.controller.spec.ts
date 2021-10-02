@@ -1,19 +1,13 @@
 import { ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { request } from 'http';
 import { DevelopersController } from './developers.controller';
 import { DevelopersService } from './developers.service';
-import { CreateDeveloperDto } from './dto/create-developer.dto';
 import { DeveloperEntity } from './entities/developer.entity';
-
+import { findAllDev, body } from './ultils/developers.mock';
 describe('DevelopersController', () => {
   let controller: DevelopersController;
-  const body: CreateDeveloperDto = {
-    age: 20,
-    hobby: ['Web developer', 'Music'],
-    name: 'Wellington',
-  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [DevelopersController],
@@ -22,12 +16,12 @@ describe('DevelopersController', () => {
         {
           provide: getRepositoryToken(DeveloperEntity),
           useValue: {
-            findAll: jest.fn(),
-            findOne: jest.fn(),
+            findOne: jest.fn().mockResolvedValue(findAllDev.data[0]),
             update: jest.fn(),
             remove: jest.fn(),
             create: jest.fn().mockResolvedValue(body),
             save: jest.fn().mockResolvedValue(body),
+            findAndCount: jest.fn().mockResolvedValue(findAllDev),
           },
         },
       ],
@@ -45,6 +39,7 @@ describe('DevelopersController', () => {
   describe('Create a developer', () => {
     it('should return create successfully', async () => {
       const result = await controller.create(body);
+      //assert
       expect(result).toEqual(body);
     });
     it('should return create failed', async () => {

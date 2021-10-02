@@ -3,9 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeveloperEntity } from './entities/developer.entity';
 import { CreateDeveloperDto } from './dto/create-developer.dto';
 import { UpdateDeveloperDto } from './dto/update-developer.dto';
-import { Repository } from 'typeorm';
-import { PaginationDTO } from './dto/pagination-developer.dto';
-
+import { Like, Repository } from 'typeorm';
+import {
+  paginate,
+  Pagination,
+  IPaginationOptions,
+} from 'nestjs-typeorm-paginate';
 @Injectable()
 export class DevelopersService {
   constructor(
@@ -18,22 +21,15 @@ export class DevelopersService {
     return await this.developerRepository.save(createDeveloperDto);
   }
 
-  async findAll(paginationDto: PaginationDTO): Promise<PaginationDTO> {
-    const skippedItems = (paginationDto.page - 1) * paginationDto.limit;
-
-    const totalCount = await this.developerRepository.count();
-    const developers = await this.developerRepository
-      .createQueryBuilder()
-      .orderBy('id', 'DESC')
-      .offset(skippedItems)
-      .limit(paginationDto.limit)
-      .getMany();
-    return {
-      totalCount,
-      page: paginationDto.page,
-      limit: paginationDto.limit,
-      data: developers,
-    };
+  async findAll(
+    options: IPaginationOptions,
+    dev: string,
+  ): Promise<Pagination<DeveloperEntity>> {
+    const queryBuilder = await this.developerRepository
+      .createQueryBuilder('developers')
+      .orderBy({ name: 'DESC' })
+      .where({ name: Like(`%${dev}%`) });
+    return paginate<DeveloperEntity>(queryBuilder, options);
   }
 
   async findOne(id: number): Promise<DeveloperEntity> {
@@ -47,7 +43,7 @@ export class DevelopersService {
     return await this.update(id, updateDeveloperDto);
   }
 
-  remove(id: number): Promise<boolean> {
-    return this.remove(id);
+  async remove(id: string): Promise<any> {
+    return await this.developerRepository.delete({ id });
   }
 }

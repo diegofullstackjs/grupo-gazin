@@ -8,4 +8,5 @@ export class PaginationDTO {
   page: number;
   limit: number;
   totalCount: number;
+  query: string;
 }

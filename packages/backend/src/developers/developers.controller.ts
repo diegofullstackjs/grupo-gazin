@@ -10,9 +10,7 @@ import {
 } from '@nestjs/common';
 import { DevelopersService } from './developers.service';
 import { CreateDeveloperDto } from './dto/create-developer.dto';
-import { PaginationDTO } from './dto/pagination-developer.dto';
 import { UpdateDeveloperDto } from './dto/update-developer.dto';
-import { Observable } from 'rxjs';
 @Controller('api/v1/developers')
 export class DevelopersController {
   constructor(private readonly developersService: DevelopersService) {}
@@ -23,13 +21,12 @@ export class DevelopersController {
   }
 
   @Get()
-  findAll(@Query() Paginationdto: PaginationDTO): Promise<PaginationDTO> {
-    Paginationdto.page = Number(Paginationdto.page);
-    Paginationdto.limit = Number(Paginationdto.limit);
-    return this.developersService.findAll({
-      ...Paginationdto,
-      limit: Paginationdto.limit > 10 ? 10 : Paginationdto.limit,
-    });
+  findAll(
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+    @Query('developer') developer?: string,
+  ) {
+    return this.developersService.findAll({ page, limit }, developer);
   }
 
   @Get(':id')
@@ -47,6 +44,6 @@ export class DevelopersController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.developersService.remove(+id);
+    return this.developersService.remove(id);
   }
 }
