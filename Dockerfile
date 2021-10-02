@@ -13,6 +13,7 @@ COPY package.json  lerna.json ./
 
 RUN lerna bootstrap
 
+RUN npm run mode:development
 EXPOSE 3000
 EXPOSE 4200
 

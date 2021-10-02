@@ -1,10 +1,10 @@
 version: '3.7'
 
-
 services:
   database:
     image: postgres
-    enviroment:
+    restart: always
+    environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: grupogazin
@@ -16,5 +16,13 @@ services:
     build:
       context: .
       target: development
-    volumens:
+    volumes:
       - .://grupogazin/monorepo
+      - /grupogazin/monorepo/node_modules
+    ports:
+      - 4200:4200
+      - 3000:3000
+    depends_on:
+      - database
+    
+    
