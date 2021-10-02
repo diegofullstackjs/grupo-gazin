@@ -3,17 +3,23 @@
   "author": "kelvin diego da silva soares < kelvin.fabiana@gmail.com >",
   "private": true,
   "scripts": {
-    "web:dev": "yarn lerna  run --stream web:start",
-    "web:build": "yarn lerna run --stream web:build",
-    "web:test" : "yarn lerna run --stream web:test",
-    "backend:dev": "yarn lerna  run --stream back:start",
-    "backend:build": "yarn lerna run --stream back:start:dev",
-    "backend:test" : "yarn lerna run --stream back:test"
+    "removeNodeModules" : "find . -type d -name 'node_modules' -exec rm -rf {} +",
+    "cra:dev": "yarn lerna run web:start --scope @grupogazin/web --stream",
+    "cra:build": "yarn lerna run web:build --scope @grupogazin/web --stream",
+    "cra:test" : "yarn lerna run web:test --scope @grupogazin/web --stream",
+    "backend:dev": "yarn lerna run back:dev  --scope @grupogazin/backend --stream",
+    "backend:build": "npm run lerna run --stream back:start:dev",
+    "backend:test" : "npm run lerna run --stream back:test",
+    "mode:development" : "npm run backend:dev &&  npm run cra:dev"
   },
   "devDependencies": {
+    "@craco/craco": "^6.2.0",
     "lerna": "^4.0.0",
     "cross-env": "^7.0.3",
     "fork-ts-checker-webpack-plugin": "^6.3.2",
     "tsconfig-paths-webpack-plugin": "^3.5.1"
-  }
+  },
+  "workspaces" : [
+    "packages/*"
+  ]
 }
